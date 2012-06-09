@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import popen2
+import os
 import requests
 from lxml import html
 from datetime import datetime, timedelta
@@ -20,9 +21,13 @@ today = datetime.today()
 
 
 def get_today_news():
+    os.system("/bin/echo "" >index.html") 
     fin,fout = popen2.popen2("tee -a index.html")
     fout.write("<html>")
+    fout.write("<head>")
     fout.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=gb2312\">")
+    fout.write("<link rel=\"Stylesheet\" type=\"text/css\" href=\"style.css\">")
+    fout.write("</head>")
     tds = doc.cssselect('table[width="723px"] td')
     for td in tds:
         content_tag = td.cssselect('span[class="listTitle"]')
@@ -34,7 +39,7 @@ def get_today_news():
                 link = td.cssselect('a')[0].get('href')
                 title = td.cssselect('a')[0].get('title')
                 #print datetime.strptime('2012.'+td_date, "%Y.%m.%d").strftime('%Y-%m-%d') , title, BASE_URL + link
-                fout.write("<p>")                
+                fout.write("<p><h3>")                
                 fout.write(str(datetime.strptime('2012.'+td_date, "%Y.%m.%d").strftime('%Y-%m-%d')))     
                 fout.write("<a href=\"")
                 fout.write(str(BASE_URL + link))
@@ -43,7 +48,7 @@ def get_today_news():
                 #fout.write(title.decode('GBK').encode('gb2312'))
                 fout.write(title.encode('gb2312'))
                 fout.write("</a>")
-                fout.write("</p>")
+                fout.write("</h3></p>")
     fout.write("</html>")
     fout.close()      
 if __name__ == '__main__':
