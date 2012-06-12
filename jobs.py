@@ -23,12 +23,13 @@ today = datetime.today()
 
 
 def get_today_news():
-    os.system("/bin/echo "" >index.html") 
-    fin,fout = popen2.popen2("tee -a index.html")
+    homedir = os.getcwd()
+    os.system("/bin/echo "" > cache/index.html") 
+    fin,fout = popen2.popen2("tee -a cache/index.html")
     fout.write("<html>")
     fout.write("<head>")
     fout.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=gb2312\">")
-    fout.write("<link rel=\"Stylesheet\" type=\"text/css\" href=\"style.css\">")
+    fout.write("<link rel=\"Stylesheet\" type=\"text/css\" href=\"css/style.css\">")
     #fout.write("<script src=\"goto.js\"/>")
     fout.write("<script src=\"script/jquery-1.7.1.min.js\"></script>")
     fout.write("<script src=\"script/jquery.mobile-1.1.0.min.js\"></script>")
@@ -37,6 +38,8 @@ def get_today_news():
     fout.write("</head>")
     fout.write("<body>")
     tds = doc.cssselect('table[width="723px"] td')
+    #3global newsnum
+    newsnum = 0
     for td in tds:
         content_tag = td.cssselect('span[class="listTitle"]')
         date_tag = td.cssselect('span[class="titleTime"]')
@@ -50,19 +53,30 @@ def get_today_news():
                 web=urllib2.urlopen(str(BASE_URL + link))
                 soup = BeautifulSoup(web)
                 #print web
-                content = soup.body.div.extract() 
-                fout.write("<div>")                
-                fout.write("<a title=\'")                
-                fout.write(str(BASE_URL + link))
-                #fout.write(str(content))
-                fout.write("\' onclick='GetContent()'>")
+                content = soup.body.div.extract()
+                file=open('cache/news_'+str(newsnum) + '.html','w+') 
+                head = BeautifulSoup(open(homedir +  "/cache/construction/head.html"))
+                bodyend = BeautifulSoup(open(homedir +  "/cache/construction/bodyend.html"))
+                print >> file,head
+                print >> file,"<body>"
+                print >> file,content
+                print >> file,bodyend
+                file.close()  
+                fout.write("<div id=\"news_")                
+                fout.write(str(newsnum))                
+                fout.write("\">")                
+                fout.write("<a href=")                
+                fout.write("\"news_")
+                fout.write(str(newsnum))
+                fout.write(".html\">")                
                 fout.write(title.encode('gb2312'))
                 fout.write("</a>")
+                newsnum  = newsnum + 1
                 fout.write("<span>")
                 fout.write(str(datetime.strptime('2012.'+td_date, "%Y.%m.%d").strftime('%Y-%m-%d'))) 
                 fout.write("</span>")
                 fout.write("</div>")                
-                
+                 
     
                 #fout.write("<a onclick=\"goto(str(BASE_URL + link))\"")
 		#fout.write("<a href="ddd.html?#id_1">");
