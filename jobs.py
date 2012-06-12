@@ -58,9 +58,7 @@ def get_today_news():
                 head = BeautifulSoup(open(homedir +  "/cache/construction/head.html"))
                 bodyend = BeautifulSoup(open(homedir +  "/cache/construction/bodyend.html"))
                 print >> file,head
-                print >> file,"<body>"
                 print >> file,content
-                print >> file,bodyend
                 file.close()  
                 fout.write("<div id=\"news_")                
                 fout.write(str(newsnum))                
