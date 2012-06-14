@@ -30,14 +30,18 @@ ${IPTABLES} ${IPTABLES_OPTIONS} | ${TR} -s ' ' | ${SED} -e 's/^ //' \
 #
 #${CAT} ${TMP_FILE}
 #echo "/tmp/temp.txt"
-${CAT} ${TMP_FILE} | ${CUT} -d' ' -f1,2 | ${GREP} -v "0.0.0.0/0" >/tmp/temp.txt 
+${CAT} ${TMP_FILE} | ${CUT} -d' ' -f1,2 | ${GREP} -v "0.0.0.0/0" >/tmp/temp1.txt 
 
 #
 # Bytes for input
 #
 #echo "Start for INPUT"
-${CAT} ${TMP_FILE} | ${CUT} -d' ' -f1,3 | ${GREP} -v "0.0.0.0/0" >>/tmp/temp.txt 
-cat /tmp/temp.txt | while read LINE
+${CAT} ${TMP_FILE} | ${CUT} -d' ' -f1,3 | ${GREP} -v "0.0.0.0/0" >/tmp/temp2.txt 
+cat /tmp/temp1.txt | while read LINE
 do 
-   echo $LINE | cut -d' ' -f1 >>/tmp/temp1.txt
+   echo $LINE | cut -d' ' -f1 | bc >/tmp/temp3.txt
+done
+cat /tmp/temp2.txt | while read LINE
+do 
+   echo $LINE | cut -d' ' -f1 | bc >/tmp/temp4.txt
 done
