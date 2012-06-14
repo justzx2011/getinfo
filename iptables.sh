@@ -29,11 +29,15 @@ ${IPTABLES} ${IPTABLES_OPTIONS} | ${TR} -s ' ' | ${SED} -e 's/^ //' \
 # Bytes for output
 #
 #${CAT} ${TMP_FILE}
-echo "Start for OUTPUT"
-${CAT} ${TMP_FILE} | ${CUT} -d' ' -f1,2 | ${GREP} -v "0.0.0.0/0" 
+#echo "/tmp/temp.txt"
+${CAT} ${TMP_FILE} | ${CUT} -d' ' -f1,2 | ${GREP} -v "0.0.0.0/0" >/tmp/temp.txt 
 
 #
 # Bytes for input
 #
-echo "Start for INPUT"
-${CAT} ${TMP_FILE} | ${CUT} -d' ' -f1,3 | ${GREP} -v "0.0.0.0/0" 
+#echo "Start for INPUT"
+${CAT} ${TMP_FILE} | ${CUT} -d' ' -f1,3 | ${GREP} -v "0.0.0.0/0" >>/tmp/temp.txt 
+cat /tmp/temp.txt | while read LINE
+do 
+   echo $LINE | cut -d' ' -f1 >>/tmp/temp1.txt
+done
