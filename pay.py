@@ -7,8 +7,8 @@ import os
 import requests
 from lxml import html
 
-USERNAME = "1075490232"
-PASSOWORD = "123456"
+USERNAME = ""
+PASSOWORD = ""
 
 BASE_URL = "http://pay.xidian.edu.cn"
 
